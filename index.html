@@ -38,6 +38,47 @@ footer { text-align: center; color: #64748b; font-size: .85rem; padding: 2rem 1r
 </header>
 <main>
 
+
+<section id="v2">
+<h2>Run 2 — Oct 29, 2026: rules.csv v2 (BF singles + legacy-shadow investigation)</h2>
+<p>Re-ran all 23 rules against the <strong>live seadon.co</strong> bundle-quote endpoint (campaign active on prod; the preview domain returns 410). 49 scenarios executed including new sanity cases. Every rule passes when items are on <em>separate lines/variants</em> — including all cases the first tester reported OK.</p>
+<h3>Rule results (v2)</h3>
+<table>
+<thead><tr><th>Rule</th><th>Scenarios</th><th>Expected totals (all matched)</th><th>Result</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>Merino 30%/40% (all 4 types, mix)</td><td>x1/x2/x3/x4 mixes</td><td>$98 / $137.20 / $190.80 / correct</td><td>PASS</td><td></td></tr>
+<tr><td>Gale V2 BOGO</td><td>2 solids / solid+print / 2 prints / x4</td><td>$99 / $110 / $110 / $209</td><td>PASS</td><td></td></tr>
+<tr><td>MTN Sherpa Fleece 2/$99</td><td>x1 BF single / x2 / x3 leftover</td><td>$59 / $99 / $158</td><td>PASS</td><td></td></tr>
+<tr><td>Gale ACT $29-off-2</td><td>J+J / J+H / H+H / single</td><td>$249 / $259 / $269 / $139</td><td>PASS</td><td></td></tr>
+<tr><td>EXP Travel Pants 2/$139</td><td>x1 / x2 (2 colours) / x3 (2 colours)</td><td>$79 / $139 / $218</td><td>PASS</td><td>Same-variant qty fails — see Legacy bug</td></tr>
+<tr><td>Helios Trail Pants 2/$99</td><td>x2 (2 colours) / mixed w/ Cropped</td><td>$99 / $98 (BF singles)</td><td>PASS</td><td>Same-variant qty fails</td></tr>
+<tr><td>Helios Cropped 2/$69</td><td>x2 (2 colours)</td><td>$69</td><td>PASS</td><td>Same-variant qty fails</td></tr>
+<tr><td>Shorts 2/$59</td><td>Trail+Shoreline mix / x3 leftover</td><td>$59 / $93</td><td>PASS</td><td>Same-variant qty fails</td></tr>
+<tr><td>Tech Tees 2/$50 3/$60</td><td>x2 / x3 / x5</td><td>$50 / $60 / $110</td><td>PASS</td><td></td></tr>
+<tr><td>Tech Tanks 2/$30 3/$39</td><td>x1 / x2 / x3 / in multi-cart</td><td>$20 / $30 / $39 / correct</td><td>PASS</td><td>Same-variant qty fails</td></tr>
+<tr><td>Verano 2/$89</td><td>x2 / x3 leftover</td><td>$89 / $138</td><td>PASS</td><td>x3 same-variant fails</td></tr>
+<tr><td>Hugger Beanie 2/$39</td><td>x1 / x2 / in multi-cart</td><td>$25 / $39 / correct</td><td>PASS</td><td></td></tr>
+<tr><td>Underwear ladders</td><td>M x3 / M x5 / W x3 / mixed 3M+3W</td><td>$59 / $89 / $55 / $114</td><td>PASS</td><td></td></tr>
+<tr><td>Roamer Caps 2/$45 3/$60</td><td>x2 / x3 / x4</td><td>$45 / $60 / $90</td><td>PASS</td><td></td></tr>
+<tr><td>Multi-group stack</td><td>9-item cart, 5 groups</td><td>$384.80 exact</td><td>PASS</td><td></td></tr>
+</tbody></table>
+<h3>BUG (confirmed live): legacy per-product discount shadows the BF campaign on same-variant quantities</h3>
+<p>When 2+ units of the <strong>same variant</strong> of EXP / Trail / Shoreline / Cropped / Verano / Daymaker Tank are on one line, an old <code>legacy</code> price rule (per-unit "$X off", plans labelled <code>legacy / product-legacy</code> in the quote payload) overrides the Black Friday campaign. Different colours of the same product price correctly. These totals reproduce the tester's doc exactly (9/9 rows).</p>
+<table>
+<thead><tr><th>Scenario</th><th>Expected</th><th>Live actual</th></tr></thead>
+<tbody>
+<tr><td>EXP Dark Olive ×3 (one line)</td><td>$218 (139+79)</td><td>$129 — &#x27;legacy: $36 off&#x27;</td></tr>
+<tr><td>EXP Dark Olive ×2 (one line)</td><td>$139</td><td>$134 — &#x27;legacy: $12 off&#x27; (cheaper-per-unit anomaly: x3 $129 &lt; x2 $134)</td></tr>
+<tr><td>Trail Pants ×2 / ×3 same variant</td><td>$99 / $158</td><td>$98 / $87 — &#x27;legacy: $10/$30 off&#x27;</td></tr>
+<tr><td>Shoreline ×2 / ×3 same variant</td><td>$59 / $93</td><td>$56 / $48 — &#x27;legacy: $6/$18 off&#x27;</td></tr>
+<tr><td>Cropped ×2 / ×3 same variant</td><td>$69 / $108</td><td>$62 / $54 — &#x27;legacy: $8/$21 off&#x27;</td></tr>
+<tr><td>Verano ×3 same variant</td><td>$138</td><td>$75 — &#x27;legacy: $24 off&#x27;</td></tr>
+<tr><td>Daymaker Tank ×3 same variant</td><td>$39</td><td>$24 — &#x27;legacy: $12 off&#x27;</td></tr>
+<tr><td>Trail ×2 + Shoreline ×2 (2 same-variant pairs)</td><td>$158</td><td>$154 — both hit legacy</td></tr>
+</tbody></table>
+<p><strong>Root cause:</strong> a legacy quantity discount (roughly 10% off at qty 2, 30% off at qty 3, per product) still exists on those product groups in Shopify. It wins priority over the BF campaign for same-variant carts, producing (a) wrong bundle totals and (b) the nonsensical result that EXP ×3 ($129) costs less than EXP ×2 ($134). Fix = delete/deactivate the legacy per-product discounts for EXP, Helios Trail, Shoreline, Cropped, Verano and Daymaker Tank so the BF campaign plan serves all quantities.</p>
+</section>
+
 <section>
 <h2>Verdict</h2>
 <p><strong>28 of 40 scenarios priced correctly. 12 failed — every failure is real money off the table or overcharged at checkout.</strong> Two root causes were identified:</p>
@@ -121,7 +162,7 @@ footer { text-align: center; color: #64748b; font-size: .85rem; padding: 2rem 1r
 
 <section>
 <h2>Re-test status (2026-10-29)</h2>
-<div class="note"><strong>The Black Friday campaign endpoint now returns HTTP 410 (Gone) — the discount window is currently closed on the preview store.</strong> The 2026-10-29 screenshot re-run could not execute against live checkout; results above reflect the last completed full run (2026-10-26) against the same deployed proxy. Re-run required once the campaign window is reopened or repointed.</div>
+<div class="note"><strong>The BF campaign on the preview domain returned HTTP 410 (Gone) during the Oct 29 screenshot attempt — the live campaign runs on seadon.co (see Run 2 below).</strong> The 2026-10-29 screenshot re-run could not execute against live checkout; results above reflect the last completed full run (2026-10-26) against the same deployed proxy. Re-run required once the campaign window is reopened or repointed.</div>
 </section>
 
 <section>
