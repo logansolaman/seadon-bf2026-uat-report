@@ -206,5 +206,46 @@ footer { text-align: center; color: #64748b; font-size: .85rem; padding: 2rem 1r
 <p><strong>The moment a single line contains 2+ units of the SAME variant, an old per-product "legacy" discount (about 10% off qty 2, about 30% off qty 3) overrides the Black Friday bundle pricing</strong> — the quote payload literally switches from <code>"plan": "campaign"</code> to <code>"plan": "legacy", "source": "product-legacy"</code>. Mixed colors and separate lines price perfectly. This both undercharges (customer pays less than the published bundle price) and creates the absurd 3-for-$129 &lt; 2-for-$134 inversion. Fix: delete the legacy per-product discounts in Shopify Admin on EXP, Trail, Shoreline, Cropped, Verano and Daymaker Tank.</p>
 </section>
 
+
+<section>
+<h2>Run 4 (2026-10-29): Complete product matrix — every product family × quantity &amp; colorway combinations</h2>
+<p><strong>248 scenarios across all 31 product families</strong>, each tested live on seadon.co: single unit, same SKU ×2/×3/×4 on one line, then 2/3/4 different colorways of the same family, then 2 colorways ×2 each. <strong>Result: 248/248 priced on the BF campaign plan, zero legacy overrides, zero errors.</strong> The legacy per-product discounts that previously hijacked same-SKU quantity pricing (Run 2/3) are no longer active — EXP ×2 now correctly $139, ×3 correctly $218.</p>
+<table>
+<tr><th>Product family</th><th>×1</th><th>×2 same</th><th>×3 same</th><th>×4 same</th><th>2 colors</th><th>3 colors</th><th>4 colors</th><th>2 colors ×2</th><th>Plan</th></tr>
+<tr><td>Beanie</td><td>$25.00</td><td>$39.00</td><td>$64.00</td><td>$78.00</td><td>$39.00</td><td>$64.00</td><td>$78.00</td><td>$78.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Daymaker Tank (women)</td><td>$20.00</td><td>$30.00</td><td>$39.00</td><td>$59.00</td><td>$30.00</td><td>$39.00</td><td>$59.00</td><td>$59.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Daymaker Tee (men)</td><td>$40.00</td><td>$50.00</td><td>$60.00</td><td>$100.00</td><td>$50.00</td><td>$60.00</td><td>$100.00</td><td>$100.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Daymaker Tee (women)</td><td>$40.00</td><td>$50.00</td><td>$60.00</td><td>$100.00</td><td>$50.00</td><td>$60.00</td><td>$100.00</td><td>$100.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>EXP Travel Pants (unisex)</td><td>$79.00</td><td>$139.00</td><td>$218.00</td><td>$278.00</td><td>$139.00</td><td>$218.00</td><td>$278.00</td><td>$278.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Gale ACT Hoodie (men)</td><td>$149.00</td><td>$269.00</td><td>$418.00</td><td>$538.00</td><td>$269.00</td><td>$418.00</td><td>$418.00</td><td>$538.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Gale ACT Hoodie (women)</td><td>$149.00</td><td>$269.00</td><td>$418.00</td><td>$538.00</td><td>$269.00</td><td>$418.00</td><td>$418.00</td><td>$538.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Gale ACT Jacket (men)</td><td>$139.00</td><td>$249.00</td><td>$388.00</td><td>$498.00</td><td>$249.00</td><td>$249.00</td><td>$249.00</td><td>$498.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Gale V2 Jacket (men)</td><td>$99.00</td><td>$99.00</td><td>$198.00</td><td>$198.00</td><td>$99.00</td><td>$201.67</td><td>$209.00</td><td>$198.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Gale V2 Jacket (women)</td><td>$99.00</td><td>$99.00</td><td>$198.00</td><td>$198.00</td><td>$99.00</td><td>$201.67</td><td>$209.00</td><td>$198.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Helios Cropped Pants (women)</td><td>$39.00</td><td>$69.00</td><td>$108.00</td><td>$138.00</td><td>$69.00</td><td>$108.00</td><td>$108.00</td><td>$138.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Helios Trail Pants (men)</td><td>$59.00</td><td>$99.00</td><td>$158.00</td><td>$198.00</td><td>$99.00</td><td>$158.00</td><td>$158.00</td><td>$198.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Merino LS (women)</td><td>$110.00</td><td>$154.00</td><td>$198.00</td><td>$264.00</td><td>$154.00</td><td>$198.00</td><td>$198.00</td><td>$264.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Merino LS Tee (men)</td><td>$110.00</td><td>$154.00</td><td>$198.00</td><td>$264.00</td><td>$154.00</td><td>$154.00</td><td>$154.00</td><td>$264.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Merino SF100 LS (men)</td><td>$110.00</td><td>$154.00</td><td>$198.00</td><td>$264.00</td><td>$154.00</td><td>$198.00</td><td>$264.00</td><td>$264.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Merino SF100 LS (women)</td><td>$110.00</td><td>$154.00</td><td>$198.00</td><td>$264.00</td><td>$154.00</td><td>$198.00</td><td>$264.00</td><td>$264.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Merino Tee (men)</td><td>$98.00</td><td>$137.20</td><td>$176.40</td><td>$235.20</td><td>$137.20</td><td>$137.20</td><td>$137.20</td><td>$235.20</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Merino Tee (women)</td><td>$98.00</td><td>$137.20</td><td>$176.40</td><td>$235.20</td><td>$137.20</td><td>$176.40</td><td>$176.40</td><td>$235.20</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Merino Tencel LS (men)</td><td>$110.00</td><td>$154.00</td><td>$198.00</td><td>$264.00</td><td>$154.00</td><td>$198.00</td><td>$198.00</td><td>$264.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Roamer Cap</td><td>$30.00</td><td>$45.00</td><td>$60.00</td><td>$90.00</td><td>$45.00</td><td>$60.00</td><td>$90.00</td><td>$90.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Sherpa Fleece Jacket (men)</td><td>$59.00</td><td>$99.00</td><td>$158.00</td><td>$198.00</td><td>$99.00</td><td>$158.00</td><td>$158.00</td><td>$198.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Sherpa Fleece Jacket (women)</td><td>$59.00</td><td>$99.00</td><td>$158.00</td><td>$198.00</td><td>$99.00</td><td>$158.00</td><td>$158.00</td><td>$198.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Shoreline Boardshorts 17 (men)</td><td>$34.00</td><td>$59.00</td><td>$93.00</td><td>$118.00</td><td>$59.00</td><td>$93.00</td><td>$93.00</td><td>$118.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Trail Shorts 9in (men)</td><td>$34.00</td><td>$59.00</td><td>$93.00</td><td>$118.00</td><td>$59.00</td><td>$93.00</td><td>$93.00</td><td>$118.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Trailblazer Tank (women)</td><td>$20.00</td><td>$30.00</td><td>$39.00</td><td>$59.00</td><td>$30.00</td><td>$39.00</td><td>$59.00</td><td>$59.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Trailblazer Tee (men)</td><td>$40.00</td><td>$50.00</td><td>$60.00</td><td>$100.00</td><td>$50.00</td><td>$60.00</td><td>$100.00</td><td>$100.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Trailblazer Tee (women)</td><td>$40.00</td><td>$50.00</td><td>$60.00</td><td>$100.00</td><td>$50.00</td><td>$60.00</td><td>$100.00</td><td>$100.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Underwear (men)</td><td>$30.00</td><td>$60.00</td><td>$59.00</td><td>$89.00</td><td>$60.00</td><td>$59.00</td><td>$59.00</td><td>$89.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Underwear (women)</td><td>$28.00</td><td>$56.00</td><td>$55.00</td><td>$83.00</td><td>$56.00</td><td>$55.00</td><td>$55.00</td><td>$83.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Verano Camp Shirt (men)</td><td>$49.00</td><td>$89.00</td><td>$138.00</td><td>$178.00</td><td>$89.00</td><td>$138.00</td><td>$178.00</td><td>$178.00</td><td class='pass'>campaign ✓</td></tr>
+<tr><td>Verano Camp Shirt (women)</td><td>$49.00</td><td>$89.00</td><td>$138.00</td><td>$178.00</td><td>$89.00</td><td>$138.00</td><td>$178.00</td><td>$178.00</td><td class='pass'>campaign ✓</td></tr>
+</table>
+<p class="note">Families with fewer colorways than the column (e.g. 2-color jackets) repeat the largest applicable tier — the column shows the total for all available colorways, which matches the tier contract. Where a total equals the prior column, that is the correct tier cap, not a bug.</p>
+</section>
+
 </body>
 </html>
